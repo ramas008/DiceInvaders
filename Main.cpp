@@ -1,43 +1,10 @@
-
-
 #include <windows.h>
 #include <cassert>
 #include <cstdio>
+#include <iostream>
 #include "DiceInvaders.h"
-
-class DiceInvadersLib
-{
-public:
-	explicit DiceInvadersLib(const char* libraryPath)
-	{
-		m_lib = LoadLibrary(libraryPath);
-		assert(m_lib);
-
-		DiceInvadersFactoryType* factory = (DiceInvadersFactoryType*)GetProcAddress(
-				m_lib, "DiceInvadersFactory");
-		m_interface = factory();
-		assert(m_interface);
-	}
-
-	~DiceInvadersLib()
-	{
-		FreeLibrary(m_lib);
-	}
-
-	IDiceInvaders* get() const
-	{
-		return m_interface;
-	}
-
-private:
-	DiceInvadersLib(const DiceInvadersLib&);
-	DiceInvadersLib& operator=(const DiceInvadersLib&);
-
-private:
-	IDiceInvaders* m_interface;
-	HMODULE m_lib;
-};
-
+#include "Player.h"
+#include "DiceInvadersLib.h"
 
 int APIENTRY WinMain(
 	HINSTANCE instance,
@@ -48,20 +15,34 @@ int APIENTRY WinMain(
 	DiceInvadersLib lib("DiceInvaders.dll");
 	IDiceInvaders* system = lib.get();
 
-	system->init(640, 480);
+    //Initialize the window
+    int windowWidth = 640;
+    int windowHeight = 480;
+	system->init(windowWidth, windowHeight);
 
+    //Create sprite
 	ISprite* sprite = system->createSprite("data/player.bmp");
+    ISprite* sprite2 = system->createSprite("data/enemy1.bmp");
+
+    Player* ramin = new Player(3);
 
 	float horizontalPosition = 320;
+	float horizontalPosition2 = 100;
 	float lastTime = system->getElapsedTime();
 	while (system->update())
 	{
-		sprite->draw(int(horizontalPosition), 480-32);
+	    //Draw the sprites at specified position
+		sprite->draw(int(horizontalPosition), 480-100);
+		sprite2->draw(horizontalPosition2, 100);
 
+        //Calculate the amout of move
 		float newTime = system->getElapsedTime();
 		float move = (newTime - lastTime) * 160.0f;
 		lastTime = newTime;
 
+        horizontalPosition2 += move;
+
+        //Key options
 		IDiceInvaders::KeyStatus keys;
 		system->getKeyStatus(keys);
 		if (keys.right)
@@ -71,11 +52,11 @@ int APIENTRY WinMain(
 	}
 
 	sprite->destroy();
+	sprite2->destroy();
 	system->destroy();
 
 
 	return 0;
 }
-
 
 
