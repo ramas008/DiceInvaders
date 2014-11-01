@@ -10,14 +10,16 @@ class Enemy
         ~Enemy();
 
         void update(int direction);
-        bool outOfBound();
+        bool outOfBounds();
+        void setHealth(int hp);
+
+        float horizontalPosition, verticalPosition;
+        int health;
     protected:
     private:
         bool timeToMove();
 
         int prevDirection;
-        int health;
-        float horizontalPosition, verticalPosition;
         float horizontalStep, verticalStep;
 
         IDiceInvaders* system;

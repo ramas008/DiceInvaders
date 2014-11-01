@@ -9,9 +9,11 @@ Player::Player(IDiceInvaders* sys)
 {
     health = 3;
     horizontalPosition = 320;
+    score = 0;
 
     system = sys;
     sprite = system->createSprite("data/player.bmp");
+    rocket = new Rocket(system);
     lastTime = system->getElapsedTime();
 }
 
@@ -43,6 +45,11 @@ void Player::setHealth(int hp)
     health = hp;
 }
 
+void Player::setScore(int sc)
+{
+    score += sc;
+}
+
 /** \brief Update function for the player
  *
  * \return void
@@ -53,17 +60,28 @@ void Player::update()
     //Draw sprite at new position
     sprite->draw(int(horizontalPosition), 480-100);
 
+    //Controlling keys
+    handleController();
+
+    //Update spell
+    rocket->update();
+}
+
+void Player::handleController()
+{
     //Calculating the movmentspeed
     float newTime = system->getElapsedTime();
     float move = (newTime - lastTime) * 160.0f;
     lastTime = newTime;
 
-    //Controlling keys
     IDiceInvaders::KeyStatus keys;
     system->getKeyStatus(keys);
     if (keys.right && horizontalPosition < 600)
         horizontalPosition += move;
     else if (keys.left && horizontalPosition > 10)
         horizontalPosition -= move;
-
+    else if (keys.fire)
+    {
+        rocket->shoot(horizontalPosition, 380);
+    }
 }

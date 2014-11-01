@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include "DiceInvaders.h"
+#include "Rocket.h"
 
 class Player
 {
@@ -11,11 +12,15 @@ class Player
 
         int getHealth();
         void setHealth(int hp);
-
+        void setScore(int sc);
         void update();
+        void handleController();
+
+        Rocket* rocket;
     protected:
     private:
         int health;
+        int score;
         float horizontalPosition;
         float lastTime;
         IDiceInvaders* system;

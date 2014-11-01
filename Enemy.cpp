@@ -15,8 +15,8 @@ Enemy::Enemy(IDiceInvaders* sys, int hPosition, int vPosition)
     horizontalStep = 0.005f;
     verticalStep = 10.0f;
 
-    horizontalPosition = hPosition*40;
-    verticalPosition = vPosition*40;
+    horizontalPosition = hPosition*40 + 15;
+    verticalPosition = vPosition*40 + 15;
 
     system = sys;
     sprite = system->createSprite("data/enemy1.bmp");
@@ -26,7 +26,7 @@ Enemy::Enemy(IDiceInvaders* sys, int hPosition, int vPosition)
  */
 Enemy::~Enemy()
 {
-    sprite->destroy();
+
 }
 
 /** \brief Update function for the Enemy.
@@ -37,16 +37,19 @@ Enemy::~Enemy()
  */
 void Enemy::update(int direction)
 {
-    sprite->draw(int(horizontalPosition), int(verticalPosition));
-
-    //Look if the enemy turned around in the previous turn
-    if(prevDirection != direction)
+    if(health != 0)
     {
-        verticalPosition += verticalStep;
-        prevDirection = direction;
-    }
+        sprite->draw(int(horizontalPosition), int(verticalPosition));
 
-    horizontalPosition += direction*horizontalStep;
+        //Look if the enemy turned around in the previous turn
+        if(prevDirection != direction)
+        {
+            verticalPosition += verticalStep;
+            prevDirection = direction;
+        }
+
+        horizontalPosition += direction*horizontalStep;
+    }
 }
 
 /** \brief Look if Enemy is out of the game screen.
@@ -54,7 +57,13 @@ void Enemy::update(int direction)
  * \return bool if Enemy is out or not.
  *
  */
-bool Enemy::outOfBound()
+bool Enemy::outOfBounds()
 {
     return (horizontalPosition > 600) || (horizontalPosition < 0);
 }
+
+void Enemy::setHealth(int hp)
+{
+    health = hp;
+}
+
