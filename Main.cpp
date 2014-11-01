@@ -51,9 +51,10 @@ int APIENTRY WinMain(
         if(isOutOfBounds(enemies, 0))
             direction = -direction;
 
-        if(onHit(enemies, player1->rocket->getHorizontalPosition(),  player1->rocket->getVerticalPosition()))
+        if(!player1->getRocket()->empty() && onHit(enemies, player1->getRocket()->back()->getHorizontalPosition(),  player1->getRocket()->back()->getVerticalPosition()))
         {
-            player1->rocket->onHit();
+            player1->getRocket()->clear();
+            delete player1->getRocket()->back();
             player1->setScore(10);
         }
 	}

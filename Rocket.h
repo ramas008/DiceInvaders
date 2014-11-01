@@ -11,12 +11,11 @@ class Rocket
 
         void shoot(float hPosition, float vPosition);
         void update();
-        void onHit();
+
         float getHorizontalPosition();
         float getVerticalPosition();
     protected:
     private:
-        bool test = 1;
         float horizontalPosition, verticalPosition;
         IDiceInvaders* system;
         ISprite* sprite;

@@ -42,6 +42,8 @@
 		<Unit filename="Main.cpp" />
 		<Unit filename="Player.cpp" />
 		<Unit filename="Player.h" />
+		<Unit filename="Rocket.cpp" />
+		<Unit filename="Rocket.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

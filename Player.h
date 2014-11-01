@@ -3,6 +3,7 @@
 
 #include "DiceInvaders.h"
 #include "Rocket.h"
+#include <vector>
 
 class Player
 {
@@ -15,8 +16,7 @@ class Player
         void setScore(int sc);
         void update();
         void handleController();
-
-        Rocket* rocket;
+        std::vector<Rocket*>* getRocket();
     protected:
     private:
         int health;
@@ -25,6 +25,7 @@ class Player
         float lastTime;
         IDiceInvaders* system;
         ISprite* sprite;
+        std::vector<Rocket*> rocket;
 };
 
 #endif // PLAYER_H

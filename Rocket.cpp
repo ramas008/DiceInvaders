@@ -9,18 +9,13 @@ Rocket::Rocket(IDiceInvaders* sys)
 
 Rocket::~Rocket()
 {
-    //dtor
 
 }
 
 void Rocket::shoot(float hPosition, float vPosition)
 {
-    if(test)
-    {
-        horizontalPosition = hPosition;
-        verticalPosition = vPosition;
-        test = 0;
-    }
+    horizontalPosition = hPosition;
+    verticalPosition = vPosition;
 }
 
 void Rocket::update()
@@ -30,15 +25,8 @@ void Rocket::update()
 
     verticalPosition -= 0.02f;
 
-    if(verticalPosition < 0)
-        test = 1;
 }
 
-void Rocket::onHit()
-{
-    verticalPosition = -10;
-    test = 1;
-}
 
 float Rocket::getHorizontalPosition()
 {

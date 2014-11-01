@@ -1,4 +1,6 @@
 #include "Player.h"
+#include <cstddef>
+#include <iostream>
 
 /** \brief Constructor for Player class.
  *
@@ -13,7 +15,6 @@ Player::Player(IDiceInvaders* sys)
 
     system = sys;
     sprite = system->createSprite("data/player.bmp");
-    rocket = new Rocket(system);
     lastTime = system->getElapsedTime();
 }
 
@@ -21,7 +22,7 @@ Player::Player(IDiceInvaders* sys)
  */
 Player::~Player()
 {
-    sprite->destroy();
+
 }
 
 /** \brief Get health for player
@@ -50,6 +51,11 @@ void Player::setScore(int sc)
     score += sc;
 }
 
+std::vector<Rocket*>* Player::getRocket()
+{
+    return &rocket;
+}
+
 /** \brief Update function for the player
  *
  * \return void
@@ -64,7 +70,8 @@ void Player::update()
     handleController();
 
     //Update spell
-    rocket->update();
+    if(!rocket.empty())
+        rocket.back()->update();
 }
 
 void Player::handleController()
@@ -80,8 +87,9 @@ void Player::handleController()
         horizontalPosition += move;
     else if (keys.left && horizontalPosition > 10)
         horizontalPosition -= move;
-    else if (keys.fire)
+    else if (keys.fire && rocket.empty())
     {
-        rocket->shoot(horizontalPosition, 380);
+        rocket.push_back(new Rocket(system));
+        rocket.back()->shoot(horizontalPosition, 380);
     }
 }
