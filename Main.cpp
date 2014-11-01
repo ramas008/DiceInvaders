@@ -8,24 +8,7 @@
 #include "Player.h"
 #include "Enemy.h"
 
-/** \brief Calculates the amount of steps the enemy needs to take.
- *
- * \param enemyAmount int the amount of enemies.
- * \param rowLength int the specified rowlength.
- * \return int the amount of steps.
- *
- */
-int amountSteps(int enemyAmount, int rowLength)
-{
-    int amountSteps = 0;
-
-    if(enemyAmount >= rowLength)
-        amountSteps = rowLength;
-    else
-        amountSteps = enemyAmount;
-
-    return amountSteps;
-}
+bool isOutOfBounds(std::vector<Enemy*> e, int index);
 
 int APIENTRY WinMain(
 	HINSTANCE instance,
@@ -54,17 +37,18 @@ int APIENTRY WinMain(
         enemies.push_back(new Enemy(system, i%rowLength, i/rowLength));
     }
 
-    //Get how many steps the enemy needs to take
-    int steps = amountSteps(enemyAmount, rowLength);
-
+    int direction = 1;
     //While running the game
 	while (system->update())
 	{
         player1->update();
         for(int i = 0; i < enemyAmount; i++)
         {
-            enemies[i]->update(steps);
+            enemies[i]->update(direction);
         }
+
+        if(isOutOfBounds(enemies, 0))
+            direction = -direction;
 	}
 
 	system->destroy();
@@ -72,5 +56,18 @@ int APIENTRY WinMain(
 	return 0;
 }
 
+/** \brief
+ *
+ * \param e std::vector<Enemy*>
+ * \param index int
+ * \return bool
+ *
+ */
+bool isOutOfBounds(std::vector<Enemy*> e, int index)
+{
+    if(e.size()>index)
+        return e[index]->outOfBound()?true:isOutOfBounds(e,++index);
 
+    return false;
+}
 

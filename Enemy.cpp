@@ -1,25 +1,25 @@
 #include "Enemy.h"
-#include <iostream>
 
 /** \brief Constructor for Enemy class.
  *
  * \param sys IDiceInvaders* the game system.
  * \param hPosition int the horizontal position of enemy.
  * \param vPosition int the vertical position of enemy.
- *  Initializing health, walking direction, steps taken, game system and sprite.
+ *  Initializing health, the previous direction, horizontal and
+ *  vertical step lenght, game system and starting position of sprite.
  */
 Enemy::Enemy(IDiceInvaders* sys, int hPosition, int vPosition)
 {
     health = 1;
-    walkingDirection = 1;
-    stepsTaken = 0;
+    prevDirection = 1;
+    horizontalStep = 0.005f;
+    verticalStep = 10.0f;
 
-    horizontalPosition = hPosition;
-    verticalPosition = vPosition;
+    horizontalPosition = hPosition*40;
+    verticalPosition = vPosition*40;
 
     system = sys;
     sprite = system->createSprite("data/enemy1.bmp");
-    lastTime = system->getElapsedTime();
 }
 
 /** \brief Deconstructor for Enemy class.
@@ -29,43 +29,32 @@ Enemy::~Enemy()
     sprite->destroy();
 }
 
-/** \brief Calculating the walking path of the enemy.
+/** \brief Update function for the Enemy.
  *
- * \param amountSteps int the amount of steps for each row.
+ * \param direction int the direction of movement.
  * \return void
- * Draws sprite on screen depending on the walking path.
+ *  Calculating the walk path of the Enemy.
  */
-void Enemy::update(int amountSteps)
+void Enemy::update(int direction)
 {
-    sprite->draw(10 + int(horizontalPosition)*40, 60 + int(verticalPosition)*40);
+    sprite->draw(int(horizontalPosition), int(verticalPosition));
 
-    if(timeToMove())
+    //Look if the enemy turned around in the previous turn
+    if(prevDirection != direction)
     {
-        stepsTaken += 1;
-        if(stepsTaken%(16 - amountSteps) == 0)
-        {
-            verticalPosition += 1;
-            walkingDirection *= -1;
-        }
-        else
-            horizontalPosition += walkingDirection;
+        verticalPosition += verticalStep;
+        prevDirection = direction;
     }
+
+    horizontalPosition += direction*horizontalStep;
 }
 
-/** \brief Calculating if enemy is allowed to move.
+/** \brief Look if Enemy is out of the game screen.
  *
- * \return bool if allowed or not.
+ * \return bool if Enemy is out or not.
  *
  */
-bool Enemy::timeToMove()
+bool Enemy::outOfBound()
 {
-    float movementSpeed = 1.0;
-    float newTime = system->getElapsedTime();
-    float move = (newTime - lastTime);
-    if(move > movementSpeed)
-    {
-        lastTime = newTime;
-        return true;
-    }
-    return false;
+    return (horizontalPosition > 600) || (horizontalPosition < 0);
 }

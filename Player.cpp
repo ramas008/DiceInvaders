@@ -1,6 +1,4 @@
 #include "Player.h"
-#include <iostream>
-
 
 /** \brief Constructor for Player class.
  *
@@ -11,6 +9,7 @@ Player::Player(IDiceInvaders* sys)
 {
     health = 3;
     horizontalPosition = 320;
+
     system = sys;
     sprite = system->createSprite("data/player.bmp");
     lastTime = system->getElapsedTime();
@@ -22,7 +21,6 @@ Player::~Player()
 {
     sprite->destroy();
 }
-
 
 /** \brief Get health for player
  *

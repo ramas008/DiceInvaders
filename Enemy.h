@@ -9,17 +9,16 @@ class Enemy
         Enemy(IDiceInvaders* sys, int hPosition, int vPosition);
         ~Enemy();
 
-        void update(int amountSteps);
-
+        void update(int direction);
+        bool outOfBound();
     protected:
     private:
         bool timeToMove();
 
+        int prevDirection;
         int health;
         float horizontalPosition, verticalPosition;
-        float lastTime;
-        int walkingDirection;
-        int stepsTaken;
+        float horizontalStep, verticalStep;
 
         IDiceInvaders* system;
         ISprite* sprite;
