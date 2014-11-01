@@ -6,21 +6,20 @@
 class Player
 {
     public:
-        Player(IDiceInvaders* system, ISprite* sprite);
-        virtual ~Player();
+        Player(IDiceInvaders* sys);
+        ~Player();
 
         int getHealth();
-        void setHealth(int health);
+        void setHealth(int hp);
 
-        void updatePlayer();
-
+        void update();
     protected:
     private:
-        int hp;
+        int health;
         float horizontalPosition;
         float lastTime;
-        IDiceInvaders* playerSystem;
-        ISprite* playerSprite;
+        IDiceInvaders* system;
+        ISprite* sprite;
 };
 
 #endif // PLAYER_H
