@@ -7,9 +7,9 @@
 #include "DiceInvadersLib.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "CollisionDetection.h"
 
 bool isOutOfBounds(std::vector<Enemy*> e, unsigned int index);
-bool onHit(std::vector<Enemy*> e, float position[]);
 
 int APIENTRY WinMain(
 	HINSTANCE instance,
@@ -52,17 +52,28 @@ int APIENTRY WinMain(
             direction = -direction;
 
         // Check if rocket hits enemy
-        if(!player1->getRocket()->empty() &&
-           onHit(enemies, player1->getRocket()->back()->getPosition()))
+        for(int i = 0; i < enemies.size(); i++)
         {
-            player1->getRocket()->clear();
-            delete player1->getRocket()->back();
-            player1->setScore(10);
+            if(!player1->getRocket()->empty() && enemies[i]->health != 0 &&
+               CollisionDetection::onHit(enemies[i]->getPosition(), player1->getRocket()->back()->getPosition()))
+            {
+                enemies[i]->setHealth(0);
+                player1->getRocket()->clear();
+                delete player1->getRocket()->back();
+                player1->setScore(10);
+            }
+
+            if(player1->getHealth() != 0 && enemies[i]->health != 0 &&
+               CollisionDetection::onHit(enemies[i]->getPosition(), player1->getPosition()))
+            {
+                enemies[i]->setHealth(0);
+                player1->setHealth(player1->getHealth()-1);
+            }
         }
 
         // Check if rocket went out of screen
         if(!player1->getRocket()->empty() &&
-           player1->getRocket()->back()->getPosition()[1] < 0)
+           player1->getRocket()->back()->getPosition()->y() < 0)
         {
             player1->getRocket()->clear();
             delete player1->getRocket()->back();
@@ -86,30 +97,5 @@ bool isOutOfBounds(std::vector<Enemy*> e, unsigned int index)
     if(e.size()>index)
         return e[index]->outOfBounds()?true:isOutOfBounds(e,++index);
 
-    return false;
-}
-
-/** \brief
- *
- * \param e std::vector<Enemy*>
- * \param hPosition float
- * \param vPosition float
- * \return bool
- *
- */
-bool onHit(std::vector<Enemy*> e, float position[])
-{
-    for(unsigned int i = 0; i < e.size(); i++)
-    {
-        if(position[0] > e[i]->horizontalPosition - 15 &&
-           position[0] < e[i]->horizontalPosition + 15 &&
-           position[1] > e[i]->verticalPosition - 15 &&
-           position[1] < e[i]->verticalPosition + 15 &&
-           e[i]->health != 0)
-        {
-            e[i]->setHealth(0);
-            return true;
-        }
-    }
     return false;
 }

@@ -1,5 +1,4 @@
 #include "Player.h"
-#include <cstddef>
 #include <iostream>
 
 /** \brief Constructor for Player class.
@@ -10,7 +9,7 @@
 Player::Player(IDiceInvaders* sys)
 {
     health = 3;
-    horizontalPosition = 320;
+    position = Vec2(320, 480 - 100);
     score = 0;
 
     system = sys;
@@ -74,15 +73,23 @@ std::vector<Rocket*>* Player::getRocket()
  */
 void Player::update()
 {
-    // Draw sprite at new position
-    sprite->draw(int(horizontalPosition), 480-100);
+    if(health != 0)
+    {
+        // Draw sprite at new position
+        sprite->draw(int(position.x()), int(position.y()));
 
-    // Controlling keys
-    handleController();
+        // Controlling keys
+        handleController();
 
-    // Update spell
-    if(!rocket.empty())
-        rocket.back()->update();
+        // Update spell
+        if(!rocket.empty())
+            rocket.back()->update();
+    }
+}
+
+Vec2* Player::getPosition()
+{
+    return &position;
 }
 
 /** \brief Handles the controller
@@ -101,33 +108,33 @@ void Player::handleController()
     system->getKeyStatus(keys);
 
     // Checking if moving to the right and shooting
-    if(keys.right && horizontalPosition < 600 && keys.fire && rocket.empty())
+    if(keys.right && position.x() < 600 && keys.fire && rocket.empty())
     {
-        horizontalPosition += move;
+        position.moveX(move);
         rocket.push_back(new Rocket(system));
-        rocket.back()->shoot(horizontalPosition, 380);
+        rocket.back()->shoot(position.x(), position.y());
     }
 
     // Checking if moving to the left and shooting
-    else if(keys.left && horizontalPosition > 10 && keys.fire && rocket.empty())
+    else if(keys.left && position.x() > 10 && keys.fire && rocket.empty())
     {
-        horizontalPosition -= move;
+        position.moveX(-move);
         rocket.push_back(new Rocket(system));
-        rocket.back()->shoot(horizontalPosition, 380);
+        rocket.back()->shoot(position.x(), position.y());
     }
 
     // Checking if moving to the right
-    else if (keys.right && horizontalPosition < 600)
-        horizontalPosition += move;
+    else if (keys.right && position.x() < 600)
+        position.moveX(move);
 
     // Checking if moving to the left
-    else if (keys.left && horizontalPosition > 10)
-        horizontalPosition -= move;
+    else if (keys.left && position.x() > 10)
+        position.moveX(-move);
 
     // Checking if shooting
     else if (keys.fire && rocket.empty())
     {
         rocket.push_back(new Rocket(system));
-        rocket.back()->shoot(horizontalPosition, 380);
+        rocket.back()->shoot(position.x(), position.y());
     }
 }

@@ -13,21 +13,19 @@ Rocket::~Rocket()
 
 void Rocket::shoot(float hPosition, float vPosition)
 {
-    horizontalPosition = hPosition;
-    verticalPosition = vPosition;
+    position = Vec2(hPosition, vPosition);
 }
 
 void Rocket::update()
 {
     // Draw sprite at new position
-    sprite->draw(int(horizontalPosition), int(verticalPosition)-20);
-    position[0] = horizontalPosition;
-    position[1] = verticalPosition;
-    verticalPosition -= 0.02f;
+    sprite->draw(int(position.x()), int(position.y())-20);
+
+    position.moveY(-0.02f);
 }
 
-float* Rocket::getPosition()
+Vec2* Rocket::getPosition()
 {
-    return position;
+    return &position;
 }
 

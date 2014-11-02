@@ -4,6 +4,7 @@
 #include "DiceInvaders.h"
 #include "Rocket.h"
 #include <vector>
+#include "Vec2.h"
 
 class Player
 {
@@ -11,6 +12,7 @@ class Player
         Player(IDiceInvaders* sys);
         ~Player();
 
+        Vec2* getPosition();
         int getHealth();
         void setHealth(int hp);
         void setScore(int sc);
@@ -21,8 +23,9 @@ class Player
     private:
         int health;
         int score;
-        float horizontalPosition;
+        Vec2 position;
         float lastTime;
+
         IDiceInvaders* system;
         ISprite* sprite;
         std::vector<Rocket*> rocket;

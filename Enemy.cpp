@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include <iostream>
 
 /** \brief Constructor for Enemy class.
  *
@@ -12,11 +13,9 @@ Enemy::Enemy(IDiceInvaders* sys, int hPosition, int vPosition)
 {
     health = 1;
     prevDirection = 1;
-    horizontalStep = 0.005f;
-    verticalStep = 10.0f;
 
-    horizontalPosition = hPosition*40 + 15;
-    verticalPosition = vPosition*40 + 15;
+    steps = Vec2(0.005f, 10.0f);
+    position = Vec2(hPosition*40 + 15, vPosition*40 + 15);
 
     system = sys;
     sprite = system->createSprite("data/enemy1.bmp");
@@ -39,16 +38,16 @@ void Enemy::update(int direction)
 {
     if(health != 0)
     {
-        sprite->draw(int(horizontalPosition), int(verticalPosition));
+        sprite->draw(int(position.x()), int(position.y()));
 
         // Look if the enemy turned around in the previous turn
         if(prevDirection != direction)
         {
-            verticalPosition += verticalStep;
+            position.moveY(steps.y());
             prevDirection = direction;
         }
 
-        horizontalPosition += direction*horizontalStep;
+        position.moveX(direction*steps.x());
     }
 }
 
@@ -59,7 +58,12 @@ void Enemy::update(int direction)
  */
 bool Enemy::outOfBounds()
 {
-    return (horizontalPosition > 600) || (horizontalPosition < 0);
+    return (position.x() > 600) || (position.x() < 0);
+}
+
+Vec2* Enemy::getPosition()
+{
+    return &position;
 }
 
 void Enemy::setHealth(int hp)

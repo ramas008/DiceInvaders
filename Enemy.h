@@ -2,6 +2,7 @@
 #define ENEMY_H
 
 #include "DiceInvaders.h"
+#include "Vec2.h"
 
 class Enemy
 {
@@ -13,14 +14,16 @@ class Enemy
         bool outOfBounds();
         void setHealth(int hp);
 
-        float horizontalPosition, verticalPosition;
+        Vec2* getPosition();
+
         int health;
     protected:
     private:
         bool timeToMove();
 
         int prevDirection;
-        float horizontalStep, verticalStep;
+        Vec2 steps;
+        Vec2 position;
 
         IDiceInvaders* system;
         ISprite* sprite;

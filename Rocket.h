@@ -2,7 +2,7 @@
 #define ROCKET_H
 
 #include "DiceInvaders.h"
-
+#include "Vec2.h"
 
 class Rocket
 {
@@ -13,12 +13,12 @@ class Rocket
         void shoot(float hPosition, float vPosition);
         void update();
 
-        float* getPosition();
+        Vec2* getPosition();
     protected:
     private:
         ISprite* sprite;
+        Vec2 position;
         float horizontalPosition, verticalPosition;
-        float position[2];
         IDiceInvaders* system;
 };
 
