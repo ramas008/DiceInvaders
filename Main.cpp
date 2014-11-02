@@ -60,7 +60,6 @@ int APIENTRY WinMain(
             player1->setScore(10);
         }
 
-
         // Check if rocket went out of screen
         if(!player1->getRocket()->empty() &&
            player1->getRocket()->back()->getPosition()[1] < 0)
