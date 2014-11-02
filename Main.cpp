@@ -9,8 +9,6 @@
 #include "Enemy.h"
 #include "CollisionDetection.h"
 
-bool isOutOfBounds(std::vector<Enemy*> e, unsigned int index);
-
 int APIENTRY WinMain(
 	HINSTANCE instance,
 	HINSTANCE previousInstance,
@@ -51,9 +49,10 @@ int APIENTRY WinMain(
         if(CollisionDetection::isOutOfBounds(enemies, 0))
             direction = -direction;
 
-        // Check if rocket hits enemy
-        for(int i = 0; i < enemies.size(); i++)
+        // OnHit loop
+        for(unsigned int i = 0; i < enemies.size(); i++)
         {
+            // Check if rocket hits enemy
             if(!player1->getRocket()->empty() && enemies[i]->health != 0 &&
                CollisionDetection::onHit(enemies[i]->getPosition(), player1->getRocket()->back()->getPosition()))
             {
@@ -63,6 +62,7 @@ int APIENTRY WinMain(
                 player1->setScore(10);
             }
 
+            // Check if enemy hits player
             if(player1->getHealth() != 0 && enemies[i]->health != 0 &&
                CollisionDetection::onHit(enemies[i]->getPosition(), player1->getPosition()))
             {

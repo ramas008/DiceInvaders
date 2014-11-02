@@ -19,6 +19,7 @@ Enemy::Enemy(IDiceInvaders* sys, int hPosition, int vPosition)
 
     system = sys;
     sprite = system->createSprite("data/enemy1.bmp");
+    lastTime = system->getElapsedTime();
 }
 
 /** \brief Deconstructor for Enemy class.
@@ -40,14 +41,18 @@ void Enemy::update(int direction)
     {
         sprite->draw(int(position.x()), int(position.y()));
 
+        float newTime = system->getElapsedTime();
+        float move = (newTime - lastTime) * 160.0f;
+        lastTime = newTime;
+
         // Look if the enemy turned around in the previous turn
         if(prevDirection != direction)
         {
-            position.moveY(steps.y());
+            position.moveY(0.1f);
             prevDirection = direction;
         }
 
-        position.moveX(direction*steps.x());
+        position.moveX(direction*move);
     }
 }
 

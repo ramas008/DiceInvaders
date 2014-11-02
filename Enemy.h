@@ -20,11 +20,10 @@ class Enemy
     protected:
     private:
         bool timeToMove();
-
         int prevDirection;
         Vec2 steps;
         Vec2 position;
-
+        float lastTime;
         IDiceInvaders* system;
         ISprite* sprite;
 };
