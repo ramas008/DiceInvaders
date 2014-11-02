@@ -19,7 +19,7 @@ void Rocket::shoot(float hPosition, float vPosition)
 
 void Rocket::update()
 {
-    //Draw sprite at new position
+    // Draw sprite at new position
     sprite->draw(int(horizontalPosition), int(verticalPosition)-20);
     position[0] = horizontalPosition;
     position[1] = verticalPosition;

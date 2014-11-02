@@ -41,7 +41,7 @@ void Enemy::update(int direction)
     {
         sprite->draw(int(horizontalPosition), int(verticalPosition));
 
-        //Look if the enemy turned around in the previous turn
+        // Look if the enemy turned around in the previous turn
         if(prevDirection != direction)
         {
             verticalPosition += verticalStep;

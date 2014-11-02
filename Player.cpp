@@ -5,7 +5,7 @@
 /** \brief Constructor for Player class.
  *
  * \param sys IDiceInvaders* the game system.
- *  Initialzing health, starting position, game system and sprite.
+ *  Initialize health, score, starting position, game system and sprite.
  */
 Player::Player(IDiceInvaders* sys)
 {
@@ -25,7 +25,7 @@ Player::~Player()
 
 }
 
-/** \brief Get health for player
+/** \brief Get player health
  *
  * \return int the health.
  *
@@ -35,7 +35,7 @@ int Player::getHealth()
     return health;
 }
 
-/** \brief Sets the health for player
+/** \brief Set player health.
  *
  * \param hp int the input health.
  * \return void
@@ -46,64 +46,85 @@ void Player::setHealth(int hp)
     health = hp;
 }
 
+/** \brief Set player score.
+ *
+ * \param sc int the input score.
+ * \return void
+ *
+ */
 void Player::setScore(int sc)
 {
     score += sc;
 }
 
+/** \brief Get player rocket.
+ *
+ * \return std::vector<Rocket*>* the vector containing the rocket.
+ *
+ */
 std::vector<Rocket*>* Player::getRocket()
 {
     return &rocket;
 }
 
-/** \brief Update function for the player
+/** \brief The player update function.
  *
  * \return void
- *  Draws the sprite to the screen, Calculates movementspeed and handles the controlls for the player.
+ *  Draws the sprite to the screen, handles the controller and updates the rocket.
  */
 void Player::update()
 {
-    //Draw sprite at new position
+    // Draw sprite at new position
     sprite->draw(int(horizontalPosition), 480-100);
 
-    //Controlling keys
+    // Controlling keys
     handleController();
 
-    //Update spell
+    // Update spell
     if(!rocket.empty())
         rocket.back()->update();
 }
 
+/** \brief Handles the controller
+ *
+ * \return void
+ *  Calculates the movement speed, handles the move and fire keys.
+ */
 void Player::handleController()
 {
-    //Calculating the movmentspeed
+    // Calculating the movement speed
     float newTime = system->getElapsedTime();
     float move = (newTime - lastTime) * 160.0f;
     lastTime = newTime;
 
     IDiceInvaders::KeyStatus keys;
     system->getKeyStatus(keys);
-    //Checking if moving to the right and shooting
+
+    // Checking if moving to the right and shooting
     if(keys.right && horizontalPosition < 600 && keys.fire && rocket.empty())
     {
         horizontalPosition += move;
         rocket.push_back(new Rocket(system));
         rocket.back()->shoot(horizontalPosition, 380);
     }
-    //Cheacking if moving to the left and shooting
+
+    // Checking if moving to the left and shooting
     else if(keys.left && horizontalPosition > 10 && keys.fire && rocket.empty())
     {
         horizontalPosition -= move;
         rocket.push_back(new Rocket(system));
         rocket.back()->shoot(horizontalPosition, 380);
     }
-    //Checking if moving to the right
+
+    // Checking if moving to the right
     else if (keys.right && horizontalPosition < 600)
         horizontalPosition += move;
-    //Checking if moving to the left
+
+    // Checking if moving to the left
     else if (keys.left && horizontalPosition > 10)
         horizontalPosition -= move;
-    //Checking if shooting
+
+    // Checking if shooting
     else if (keys.fire && rocket.empty())
     {
         rocket.push_back(new Rocket(system));

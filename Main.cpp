@@ -17,19 +17,19 @@ int APIENTRY WinMain(
 	LPSTR commandLine,
 	int commandShow)
 {
-    //Create system
+    // Create system
 	DiceInvadersLib lib("DiceInvaders.dll");
 	IDiceInvaders* system = lib.get();
 
-    //Initialize the window
+    // Initialize the window
     const int WIDTH = 640;
     const int HEIGHT = 480;
 	system->init(WIDTH, HEIGHT);
 
-    //Create player
+    // Create player
     Player* player1 = new Player(system);
 
-    //Creating enemies
+    // Creating enemies
     int enemyAmount = 40;
     int rowLength = 10;
     std::vector<Enemy*> enemies;
@@ -39,7 +39,7 @@ int APIENTRY WinMain(
     }
 
     int direction = 1;
-    //While running the game
+    // While running the game
 	while (system->update())
 	{
         player1->update();
@@ -51,7 +51,7 @@ int APIENTRY WinMain(
         if(isOutOfBounds(enemies, 0))
             direction = -direction;
 
-        //Check if rocket hits enemy
+        // Check if rocket hits enemy
         if(!player1->getRocket()->empty() &&
            onHit(enemies, player1->getRocket()->back()->getPosition()))
         {
@@ -60,7 +60,8 @@ int APIENTRY WinMain(
             player1->setScore(10);
         }
 
-        //Check if rocket went out of screen
+
+        // Check if rocket went out of screen
         if(!player1->getRocket()->empty() &&
            player1->getRocket()->back()->getPosition()[1] < 0)
         {
