@@ -12,3 +12,11 @@ bool CollisionDetection::onHit(Vec2* position1, Vec2* position2)
         return false;
 }
 
+bool CollisionDetection::isOutOfBounds(std::vector<Enemy*> e, unsigned int index)
+{
+    if(e.size()>index)
+        return e[index]->outOfBounds()?true:isOutOfBounds(e,++index);
+
+    return false;
+}
+

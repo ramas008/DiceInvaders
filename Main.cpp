@@ -48,7 +48,7 @@ int APIENTRY WinMain(
             enemies[i]->update(direction);
         }
 
-        if(isOutOfBounds(enemies, 0))
+        if(CollisionDetection::isOutOfBounds(enemies, 0))
             direction = -direction;
 
         // Check if rocket hits enemy
@@ -83,19 +83,4 @@ int APIENTRY WinMain(
 	system->destroy();
 
 	return 0;
-}
-
-/** \brief Check if enemy is out of bounds.
- *
- * \param e std::vector<Enemy*>
- * \param index int
- * \return bool
- *
- */
-bool isOutOfBounds(std::vector<Enemy*> e, unsigned int index)
-{
-    if(e.size()>index)
-        return e[index]->outOfBounds()?true:isOutOfBounds(e,++index);
-
-    return false;
 }
