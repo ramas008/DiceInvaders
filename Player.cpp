@@ -83,10 +83,27 @@ void Player::handleController()
 
     IDiceInvaders::KeyStatus keys;
     system->getKeyStatus(keys);
-    if (keys.right && horizontalPosition < 600)
+    //Checking if moving to the right and shooting
+    if(keys.right && horizontalPosition < 600 && keys.fire && rocket.empty())
+    {
         horizontalPosition += move;
+        rocket.push_back(new Rocket(system));
+        rocket.back()->shoot(horizontalPosition, 380);
+    }
+    //Cheacking if moving to the left and shooting
+    else if(keys.left && horizontalPosition > 10 && keys.fire && rocket.empty())
+    {
+        horizontalPosition -= move;
+        rocket.push_back(new Rocket(system));
+        rocket.back()->shoot(horizontalPosition, 380);
+    }
+    //Checking if moving to the right
+    else if (keys.right && horizontalPosition < 600)
+        horizontalPosition += move;
+    //Checking if moving to the left
     else if (keys.left && horizontalPosition > 10)
         horizontalPosition -= move;
+    //Checking if shooting
     else if (keys.fire && rocket.empty())
     {
         rocket.push_back(new Rocket(system));

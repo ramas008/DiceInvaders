@@ -9,7 +9,7 @@
 #include "Enemy.h"
 
 bool isOutOfBounds(std::vector<Enemy*> e, unsigned int index);
-bool onHit(std::vector<Enemy*> e, float hPosition, float vPosition);
+bool onHit(std::vector<Enemy*> e, float position[]);
 
 int APIENTRY WinMain(
 	HINSTANCE instance,
@@ -51,11 +51,21 @@ int APIENTRY WinMain(
         if(isOutOfBounds(enemies, 0))
             direction = -direction;
 
-        if(!player1->getRocket()->empty() && onHit(enemies, player1->getRocket()->back()->getHorizontalPosition(),  player1->getRocket()->back()->getVerticalPosition()))
+        //Check if rocket hits enemy
+        if(!player1->getRocket()->empty() &&
+           onHit(enemies, player1->getRocket()->back()->getPosition()))
         {
             player1->getRocket()->clear();
             delete player1->getRocket()->back();
             player1->setScore(10);
+        }
+
+        //Check if rocket went out of screen
+        if(!player1->getRocket()->empty() &&
+           player1->getRocket()->back()->getPosition()[1] < 0)
+        {
+            player1->getRocket()->clear();
+            delete player1->getRocket()->back();
         }
 	}
 
@@ -87,12 +97,15 @@ bool isOutOfBounds(std::vector<Enemy*> e, unsigned int index)
  * \return bool
  *
  */
-bool onHit(std::vector<Enemy*> e, float hPosition, float vPosition)
+bool onHit(std::vector<Enemy*> e, float position[])
 {
     for(unsigned int i = 0; i < e.size(); i++)
     {
-        if(hPosition > e[i]->horizontalPosition - 15 && hPosition < e[i]->horizontalPosition + 15 &&
-           vPosition > e[i]->verticalPosition - 15 && vPosition < e[i]->verticalPosition + 15 && e[i]->health != 0)
+        if(position[0] > e[i]->horizontalPosition - 15 &&
+           position[0] < e[i]->horizontalPosition + 15 &&
+           position[1] > e[i]->verticalPosition - 15 &&
+           position[1] < e[i]->verticalPosition + 15 &&
+           e[i]->health != 0)
         {
             e[i]->setHealth(0);
             return true;

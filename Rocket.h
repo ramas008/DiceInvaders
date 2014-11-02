@@ -3,6 +3,7 @@
 
 #include "DiceInvaders.h"
 
+
 class Rocket
 {
     public:
@@ -12,13 +13,13 @@ class Rocket
         void shoot(float hPosition, float vPosition);
         void update();
 
-        float getHorizontalPosition();
-        float getVerticalPosition();
+        float* getPosition();
     protected:
     private:
-        float horizontalPosition, verticalPosition;
-        IDiceInvaders* system;
         ISprite* sprite;
+        float horizontalPosition, verticalPosition;
+        float position[2];
+        IDiceInvaders* system;
 };
 
 #endif // ROCKET_H
