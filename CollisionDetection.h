@@ -8,7 +8,7 @@
 class CollisionDetection
 {
     public:
-        static bool onHit(Vec2* position1, Vec2* position2);
+        static bool onHit(Vec2 position1, Vec2 position2);
         static bool isOutOfBounds(std::vector<Enemy*> e, unsigned int index);
     protected:
     private:

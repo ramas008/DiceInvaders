@@ -35,6 +35,8 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="Bomb.cpp" />
+		<Unit filename="Bomb.h" />
 		<Unit filename="CollisionDetection.cpp" />
 		<Unit filename="CollisionDetection.h" />
 		<Unit filename="DiceInvaders.h" />

@@ -13,12 +13,12 @@ class Rocket
         void shoot(float hPosition, float vPosition);
         void update();
 
-        Vec2* getPosition();
+        Vec2 getPosition();
     protected:
     private:
-        ISprite* sprite;
         Vec2 position;
-        float horizontalPosition, verticalPosition;
+        float lastTime;
+        ISprite* sprite;
         IDiceInvaders* system;
 };
 

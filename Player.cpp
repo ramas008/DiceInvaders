@@ -81,15 +81,15 @@ void Player::update()
         // Controlling keys
         handleController();
 
-        // Update spell
+        // Update rocket
         if(!rocket.empty())
             rocket.back()->update();
     }
 }
 
-Vec2* Player::getPosition()
+Vec2 Player::getPosition()
 {
-    return &position;
+    return position;
 }
 
 /** \brief Handles the controller
@@ -99,7 +99,7 @@ Vec2* Player::getPosition()
  */
 void Player::handleController()
 {
-    // Calculating the movement speed
+    // Calculating speed
     float newTime = system->getElapsedTime();
     float move = (newTime - lastTime) * 160.0f;
     lastTime = newTime;

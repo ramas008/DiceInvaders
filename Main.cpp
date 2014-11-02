@@ -1,12 +1,13 @@
 #include <windows.h>
+#include <iostream>
 #include <cassert>
 #include <cstdio>
-#include <iostream>
 #include <vector>
+
+#include "Enemy.h"
+#include "Player.h"
 #include "DiceInvaders.h"
 #include "DiceInvadersLib.h"
-#include "Player.h"
-#include "Enemy.h"
 #include "CollisionDetection.h"
 
 int APIENTRY WinMain(
@@ -40,12 +41,14 @@ int APIENTRY WinMain(
     // While running the game
 	while (system->update())
 	{
+	    // Update player and enemies
         player1->update();
         for(int i = 0; i < enemyAmount; i++)
         {
             enemies[i]->update(direction);
         }
 
+        // If rightmost enemy at border change direction
         if(CollisionDetection::isOutOfBounds(enemies, 0))
             direction = -direction;
 
@@ -57,8 +60,8 @@ int APIENTRY WinMain(
                CollisionDetection::onHit(enemies[i]->getPosition(), player1->getRocket()->back()->getPosition()))
             {
                 enemies[i]->setHealth(0);
-                player1->getRocket()->clear();
                 delete player1->getRocket()->back();
+                player1->getRocket()->clear();
                 player1->setScore(10);
             }
 
@@ -69,14 +72,31 @@ int APIENTRY WinMain(
                 enemies[i]->setHealth(0);
                 player1->setHealth(player1->getHealth()-1);
             }
+
+            // Check if enemy hits player
+            if(player1->getHealth() != 0 && !enemies[i]->getBomb()->empty() &&
+               CollisionDetection::onHit(enemies[i]->getBomb()->back()->getPosition(), player1->getPosition()))
+            {
+                player1->setHealth(player1->getHealth()-1);
+                delete enemies[i]->getBomb()->back();
+                enemies[i]->getBomb()->clear();
+            }
+
+            // Check if bomb went out of screen
+            if(!enemies[i]->getBomb()->empty() &&
+               enemies[i]->getBomb()->back()->getPosition().y() > HEIGHT)
+            {
+                delete enemies[i]->getBomb()->back();
+                enemies[i]->getBomb()->clear();
+            }
         }
 
         // Check if rocket went out of screen
         if(!player1->getRocket()->empty() &&
-           player1->getRocket()->back()->getPosition()->y() < 0)
+           player1->getRocket()->back()->getPosition().y() < 0)
         {
-            player1->getRocket()->clear();
             delete player1->getRocket()->back();
+            player1->getRocket()->clear();
         }
 	}
 
