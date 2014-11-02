@@ -35,6 +35,8 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="CollisionDetection.cpp" />
+		<Unit filename="CollisionDetection.h" />
 		<Unit filename="DiceInvaders.h" />
 		<Unit filename="DiceInvadersLib.h" />
 		<Unit filename="Enemy.cpp" />
@@ -44,6 +46,7 @@
 		<Unit filename="Player.h" />
 		<Unit filename="Rocket.cpp" />
 		<Unit filename="Rocket.h" />
+		<Unit filename="Vec2.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
