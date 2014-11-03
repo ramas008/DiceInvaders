@@ -1,7 +1,8 @@
 #include "Rocket.h"
 
-Rocket::Rocket(IDiceInvaders* sys)
+Rocket::Rocket(IDiceInvaders* sys, float hPosition, float vPosition)
 {
+    position = Vec2(hPosition, vPosition);
     system = sys;
     sprite = system->createSprite("data/rocket.bmp");
     lastTime = system->getElapsedTime();
@@ -10,11 +11,6 @@ Rocket::Rocket(IDiceInvaders* sys)
 Rocket::~Rocket()
 {
 
-}
-
-void Rocket::shoot(float hPosition, float vPosition)
-{
-    position = Vec2(hPosition, vPosition);
 }
 
 void Rocket::update()

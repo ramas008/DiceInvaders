@@ -1,7 +1,8 @@
 #include "Bomb.h"
 
-Bomb::Bomb(IDiceInvaders* sys)
+Bomb::Bomb(IDiceInvaders* sys, float hPosition, float vPosition)
 {
+    position = Vec2(hPosition, vPosition);
     system = sys;
     sprite = system->createSprite("data/bomb.bmp");
     lastTime = system->getElapsedTime();
@@ -10,11 +11,6 @@ Bomb::Bomb(IDiceInvaders* sys)
 Bomb::~Bomb()
 {
 
-}
-
-void Bomb::shoot(float hPosition, float vPosition)
-{
-    position = Vec2(hPosition, vPosition);
 }
 
 void Bomb::update()

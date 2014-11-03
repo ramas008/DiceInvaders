@@ -7,10 +7,9 @@
 class Rocket
 {
     public:
-        Rocket(IDiceInvaders* sys);
+        Rocket(IDiceInvaders* sys, float hPosition, float vPosition);
         ~Rocket();
 
-        void shoot(float hPosition, float vPosition);
         void update();
 
         Vec2 getPosition();

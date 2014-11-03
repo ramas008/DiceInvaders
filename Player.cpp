@@ -1,16 +1,17 @@
 #include "Player.h"
-#include <iostream>
+#include <cstdio>
 
 /** \brief Constructor for Player class.
  *
  * \param sys IDiceInvaders* the game system.
- *  Initialize health, score, starting position, game system and sprite.
+ *  Initialize health, score, starting position, rocket, game system and sprite.
  */
 Player::Player(IDiceInvaders* sys)
 {
     health = 3;
-    position = Vec2(320, 480 - 100);
     score = 0;
+    position = Vec2(320, 480 - 100);
+    rocket = NULL;
 
     system = sys;
     sprite = system->createSprite("data/player.bmp");
@@ -45,6 +46,11 @@ void Player::setHealth(int hp)
     health = hp;
 }
 
+/** \brief Get player score.
+ *
+ * \return int the score.
+ *
+ */
 int Player::getScore()
 {
     return score;
@@ -61,14 +67,15 @@ void Player::setScore(int sc)
     score += sc;
 }
 
-/** \brief Get player rocket.
+
+/** \brief Get rocket position.
  *
- * \return std::vector<Rocket*>* the vector containing the rocket.
+ * \return Vec2 the position.
  *
  */
-std::vector<Rocket*>* Player::getRocket()
+Vec2 Player::getRocketPosition()
 {
-    return &rocket;
+    return rocket->getPosition();
 }
 
 /** \brief The player update function.
@@ -78,20 +85,50 @@ std::vector<Rocket*>* Player::getRocket()
  */
 void Player::update()
 {
-    if(health != 0)
+    // Draw sprite at new position
+    sprite->draw(int(position.x()), int(position.y()));
+
+    // Controlling keys
+    handleController();
+
+    // Update rocket
+    if(hasRocket())
     {
-        // Draw sprite at new position
-        sprite->draw(int(position.x()), int(position.y()));
-
-        // Controlling keys
-        handleController();
-
-        // Update rocket
-        if(!rocket.empty())
-            rocket.back()->update();
+        rocket->update();
+        // Check if rocket went out of screen
+        if(rocket->getPosition().y() < 0)
+        {
+            deleteRocket();
+        }
     }
 }
 
+/** \brief Delete rocket.
+ *
+ * \return void
+ *
+ */
+void Player::deleteRocket()
+{
+    delete rocket;
+    rocket = NULL;
+}
+
+/** \brief Look if player rocket is in game.
+ *
+ * \return bool if player has the rocket or not.
+ *
+ */
+bool Player::hasRocket()
+{
+    return rocket?true:false;
+}
+
+/** \brief Get player position.
+ *
+ * \return Vec2 the position.
+ *
+ */
 Vec2 Player::getPosition()
 {
     return position;
@@ -104,7 +141,7 @@ Vec2 Player::getPosition()
  */
 void Player::handleController()
 {
-    // Calculating speed
+    // Calculating movement speed
     float newTime = system->getElapsedTime();
     float move = (newTime - lastTime) * 160.0f;
     lastTime = newTime;
@@ -112,34 +149,15 @@ void Player::handleController()
     IDiceInvaders::KeyStatus keys;
     system->getKeyStatus(keys);
 
-    // Checking if moving to the right and shooting
-    if(keys.right && position.x() < 600 && keys.fire && rocket.empty())
-    {
-        position.moveX(move);
-        rocket.push_back(new Rocket(system));
-        rocket.back()->shoot(position.x(), position.y());
-    }
-
-    // Checking if moving to the left and shooting
-    else if(keys.left && position.x() > 10 && keys.fire && rocket.empty())
-    {
-        position.moveX(-move);
-        rocket.push_back(new Rocket(system));
-        rocket.back()->shoot(position.x(), position.y());
-    }
-
-    // Checking if moving to the right
-    else if (keys.right && position.x() < 600)
+    // Check if moving to the right
+    if (keys.right && position.x() < 600)
         position.moveX(move);
 
-    // Checking if moving to the left
-    else if (keys.left && position.x() > 10)
+    // Check if moving to the left
+    if (keys.left && position.x() > 10)
         position.moveX(-move);
 
-    // Checking if shooting
-    else if (keys.fire && rocket.empty())
-    {
-        rocket.push_back(new Rocket(system));
-        rocket.back()->shoot(position.x(), position.y());
-    }
+    // Check if shooting
+    if (keys.fire && !hasRocket())
+        rocket = new Rocket(system, position.x(), position.y());
 }

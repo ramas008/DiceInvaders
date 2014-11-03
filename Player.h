@@ -1,7 +1,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <vector>
 #include "DiceInvaders.h"
 #include "Rocket.h"
 #include "Vec2.h"
@@ -13,25 +12,26 @@ class Player
         ~Player();
 
         Vec2 getPosition();
+        Vec2 getRocketPosition();
+        bool hasRocket();
         int getHealth();
         int getScore();
-        std::vector<Rocket*>* getRocket();
 
         void setHealth(int hp);
         void setScore(int sc);
-
+        void deleteRocket();
         void update();
         void handleController();
     protected:
     private:
+        Vec2 position;
         int health;
         int score;
-        Vec2 position;
         float lastTime;
 
         IDiceInvaders* system;
         ISprite* sprite;
-        std::vector<Rocket*> rocket;
+        Rocket* rocket;
 };
 
 #endif // PLAYER_H

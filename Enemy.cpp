@@ -1,5 +1,4 @@
 #include "Enemy.h"
-#include <iostream>
 #include <stdlib.h>
 
 /** \brief Constructor for Enemy class.
@@ -7,20 +6,21 @@
  * \param sys IDiceInvaders* the game system.
  * \param hPosition int the horizontal position of enemy.
  * \param vPosition int the vertical position of enemy.
- *  Initializing health, the previous direction,
-    position of enemy, game system.
+ *  Initializing health, position, the previous direction,
+    a random number, last time for bomb and enemy and game system.
  */
 Enemy::Enemy(IDiceInvaders* sys, int hPosition, int vPosition)
 {
-    health = 1;
     prevDirection = 1;
     position = Vec2(hPosition*40 + 15, vPosition*40 + 15);
+    bomb = NULL;
+    randomNumber = rand() % 30 + 1;
 
     system = sys;
     sprite = system->createSprite("data/enemy1.bmp");
+
     lastTime = system->getElapsedTime();
     lastBombTime = system->getElapsedTime();
-    randomNumber = rand() % 30 + 1;
 }
 
 /** \brief Deconstructor for Enemy class.
@@ -38,38 +38,44 @@ Enemy::~Enemy()
  */
 void Enemy::update(int direction)
 {
-    if(health != 0)
+    // Draw sprite at new position
+    sprite->draw(int(position.x()), int(position.y()));
+
+    // Calculating movement speed
+    float newTime = system->getElapsedTime();
+    float move = (newTime - lastTime) * 160.0f;
+    lastTime = newTime;
+
+    // Look if the enemy turned around in the previous turn
+    // This is because move variable vary in different times
+    if(prevDirection != direction)
     {
-        sprite->draw(int(position.x()), int(position.y()));
+        direction > 0?position.moveX(5):position.moveX(-5);
+        position.moveY(10.0f);
+        prevDirection = direction;
+    }
 
-        // Calculating speed
-        float newTime = system->getElapsedTime();
-        float move = (newTime - lastTime) * 160.0f;
-        lastTime = newTime;
+    // Move enemy with specified direction
+    position.moveX(direction*move);
 
-        // Look if the enemy turned around in the previous turn
-        if(prevDirection != direction)
-        {
-            direction > 0?position.moveX(5):position.moveX(-5);
-            position.moveY(10.0f);
-            prevDirection = direction;
-        }
-
-        position.moveX(direction*move);
-
-        // Shoot bomb if vector is not empty
-        if (bomb.empty() && (newTime - lastBombTime) + randomNumber > 30 )
-        {
-            randomNumber = rand() % 30 + 1;
-            lastBombTime = newTime;
-            bomb.push_back(new Bomb(system));
-            bomb.back()->shoot(position.x(), position.y());
-        }
+    // Shoot bomb if enemy has no bomb
+    if (!hasBomb() && (newTime - lastBombTime) + randomNumber > 30 )
+    {
+        randomNumber = rand() % 30 + 1;
+        lastBombTime = newTime;
+        bomb = new Bomb(system, position.x(), position.y());
     }
 
     // Update bomb
-    if(!bomb.empty())
-        bomb.back()->update();
+    if(hasBomb())
+    {
+        bomb->update();
+        // Check if bomb went out of screen
+        if(bomb->getPosition().y() > 480)
+        {
+            deleteBomb();
+        }
+    }
 }
 
 /** \brief Look if Enemy is out of the game screen.
@@ -82,9 +88,25 @@ bool Enemy::outOfBounds()
     return (position.x() > 600) || (position.x() < 0);
 }
 
-std::vector<Bomb*>* Enemy::getBomb()
+/** \brief
+ *
+ * \return Vec2
+ *
+ */
+Vec2 Enemy::getBombPosition()
 {
-    return &bomb;
+    return bomb->getPosition();
+}
+
+void Enemy::deleteBomb()
+{
+    delete bomb;
+    bomb = NULL;
+}
+
+bool Enemy::hasBomb()
+{
+    return bomb?true:false;
 }
 
 /** \brief
@@ -97,7 +119,3 @@ Vec2 Enemy::getPosition()
     return position;
 }
 
-void Enemy::setHealth(int hp)
-{
-    health = hp;
-}

@@ -7,10 +7,9 @@
 class Bomb
 {
     public:
-        Bomb(IDiceInvaders* sys);
+        Bomb(IDiceInvaders* sys, float hPosition, float vPosition);
         ~Bomb();
 
-        void shoot(float hPosition, float vPosition);
         void update();
 
         Vec2 getPosition();
