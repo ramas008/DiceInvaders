@@ -25,7 +25,7 @@ int APIENTRY WinMain(
     IDiceInvaders* system = lib.get();
 
     // Initialize the window
-	system->init(WIDTH, HEIGHT);
+    system->init(WIDTH, HEIGHT);
 
     // Create player
     Player* player1 = new Player(system);
@@ -37,9 +37,9 @@ int APIENTRY WinMain(
     int direction = 1;
 
     // While game is running
-	while (system->update())
-	{
-        // Print the player score
+    while (system->update())
+    {
+	    // Print the player score
         char buffer[50];
         sprintf(buffer, "%d", player1->getScore());
         system->drawText(30, 30, "Score: ");
@@ -81,7 +81,7 @@ int APIENTRY WinMain(
     }
 
     delete player1;
-	system->destroy();
+    system->destroy();
 
 	return 0;
 }
