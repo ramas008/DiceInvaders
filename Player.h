@@ -14,6 +14,7 @@ class Player
 
         Vec2 getPosition();
         int getHealth();
+        int getScore();
         std::vector<Rocket*>* getRocket();
 
         void setHealth(int hp);

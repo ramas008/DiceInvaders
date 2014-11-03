@@ -45,6 +45,11 @@ void Player::setHealth(int hp)
     health = hp;
 }
 
+int Player::getScore()
+{
+    return score;
+}
+
 /** \brief Set player score.
  *
  * \param sc int the input score.

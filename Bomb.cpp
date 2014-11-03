@@ -20,7 +20,7 @@ void Bomb::shoot(float hPosition, float vPosition)
 void Bomb::update()
 {
     // Draw sprite at new position
-    sprite->draw(int(position.x()), int(position.y()));
+    sprite->draw(int(position.x()), int(position.y())+20);
 
     // Calculating speed
     float newTime = system->getElapsedTime();
