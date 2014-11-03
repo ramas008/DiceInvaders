@@ -43,6 +43,8 @@
 		<Unit filename="DiceInvadersLib.h" />
 		<Unit filename="Enemy.cpp" />
 		<Unit filename="Enemy.h" />
+		<Unit filename="ListOfEnemies.cpp" />
+		<Unit filename="ListOfEnemies.h" />
 		<Unit filename="Main.cpp" />
 		<Unit filename="Player.cpp" />
 		<Unit filename="Player.h" />
