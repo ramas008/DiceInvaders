@@ -77,7 +77,7 @@ int APIENTRY WinMain(
         sprintf(buffer, "%d", player1->getScore());
         system->drawText(WIDTH/2 - 20, HEIGHT/2 - 20, "Game Over!");
         system->drawText(WIDTH/2 - 20, HEIGHT/2, "Score: ");
-	    system->drawText(WIDTH/2 + 30, HEIGHT/2, buffer);
+        system->drawText(WIDTH/2 + 30, HEIGHT/2, buffer);
     }
 
     delete player1;
