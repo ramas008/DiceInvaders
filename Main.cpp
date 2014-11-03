@@ -39,14 +39,14 @@ int APIENTRY WinMain(
     // While game is running
     while (system->update())
     {
-	    // Print the player score
+        // Print the player score
         char buffer[50];
         sprintf(buffer, "%d", player1->getScore());
         system->drawText(30, 30, "Score: ");
-	    system->drawText(80, 30, buffer);
+        system->drawText(80, 30, buffer);
 
-	    // Create new enemies if they all are dead
-	    if(firstPtr->nextEnemy == nullptr)
+        // Create new enemies if they all are dead
+        if(firstPtr->nextEnemy == nullptr)
             ListOfEnemies::createEnemies(currentPtr, firstPtr, system);
 
 	    // Update player
@@ -68,7 +68,7 @@ int APIENTRY WinMain(
         // If player is dead go to Game Over
         if(player1->getHealth() < 1)
                 break;
-	}
+    }
 
     // Game Over Screen
     while (system->update())
