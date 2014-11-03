@@ -21,8 +21,8 @@ int APIENTRY WinMain(
 	int commandShow)
 {
     // Create system
-	DiceInvadersLib lib("DiceInvaders.dll");
-	IDiceInvaders* system = lib.get();
+    DiceInvadersLib lib("DiceInvaders.dll");
+    IDiceInvaders* system = lib.get();
 
     // Initialize the window
 	system->init(WIDTH, HEIGHT);
