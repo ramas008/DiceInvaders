@@ -61,7 +61,7 @@ int APIENTRY WinMain(
             currentPtr = currentPtr->nextEnemy;
         }
 
-        // If rightmost enemy at border change direction
+        // If enemy at border change direction
         if(ListOfEnemies::isEnemyOutOfBounds(firstPtr))
             direction = -direction;
 
