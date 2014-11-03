@@ -8,23 +8,11 @@
 #include "Enemy.h"
 #include "Player.h"
 #include "DiceInvaders.h"
+#include "ListOfEnemies.h"
 #include "DiceInvadersLib.h"
-#include "CollisionDetection.h"
-
-typedef struct EnemyList {
-    Enemy* enemy;
-    EnemyList* nextEnemy;
-} EnemyList;
-
-bool isEnemyOutOfBounds(EnemyList* curr);
-void createEnemies(EnemyList* currentPtr, EnemyList* firstPtr, IDiceInvaders* system);
-void deleteEnemy(EnemyList* current, Enemy* match);
-void checkCollision(Player* player1, EnemyList* currentPtr, EnemyList* firstPtr);
 
 const int WIDTH = 640;
 const int HEIGHT = 480;
-const int ENEMY_AMOUNT = 40;
-const int ROW_LENGTH = 10;
 
 int APIENTRY WinMain(
 	HINSTANCE instance,
@@ -45,7 +33,7 @@ int APIENTRY WinMain(
     // Creating enemies
     EnemyList* currentPtr = nullptr;
     EnemyList* firstPtr = new EnemyList;
-    createEnemies(currentPtr, firstPtr, system);
+    ListOfEnemies::createEnemies(currentPtr, firstPtr, system);
     int direction = 1;
 
     // While game is running
@@ -59,7 +47,7 @@ int APIENTRY WinMain(
 
 	    // Create new enemies if they all are dead
 	    if(firstPtr->nextEnemy == nullptr)
-            createEnemies(currentPtr, firstPtr, system);
+            ListOfEnemies::createEnemies(currentPtr, firstPtr, system);
 
 	    // Update player
         player1->update();
@@ -69,12 +57,12 @@ int APIENTRY WinMain(
         while(currentPtr)
         {
             currentPtr->enemy->update(direction);
-            checkCollision(player1, currentPtr, firstPtr);
+            ListOfEnemies::checkCollision(player1, currentPtr, firstPtr);
             currentPtr = currentPtr->nextEnemy;
         }
 
         // If rightmost enemy at border change direction
-        if(isEnemyOutOfBounds(firstPtr))
+        if(ListOfEnemies::isEnemyOutOfBounds(firstPtr))
             direction = -direction;
 
         // If player is dead go to Game Over
@@ -97,92 +85,3 @@ int APIENTRY WinMain(
 
 	return 0;
 }
-
-/** \brief Check if enemy is out of bounds.
- *
- * \param current EnemyList* points on current enemy.
- * \return bool if it is out of the screen or not.
- *
- */
-bool isEnemyOutOfBounds(EnemyList* current)
-{
-    if(current)
-        return current->enemy->outOfBounds()?true:isEnemyOutOfBounds(current->nextEnemy);
-    else
-        return false;
-}
-
-/** \brief Create a single linked list with all enemies.
- *
- * \param currentPtr EnemyList* points on the current enemy.
- * \param firstPtr EnemyList* points on the first enemy.
- * \param system IDiceInvaders* the game system.
- * \return void
- *
- */
-void createEnemies(EnemyList* currentPtr, EnemyList* firstPtr, IDiceInvaders* system)
-{
-    for(int i = 0; i < ENEMY_AMOUNT; i++)
-    {
-        EnemyList* current = new EnemyList;
-        current->enemy = new Enemy(system, i%ROW_LENGTH, i/ROW_LENGTH);
-        current->nextEnemy = currentPtr;
-        currentPtr = current;
-    }
-    firstPtr->nextEnemy = currentPtr;
-}
-
-/** \brief Delete specified enemy.
- *
- * \param current EnemyList* the list with all the enemies.
- * \param match Enemy* the specified enemy.
- * \return void
- *  Delete enemy from list and from class.
- */
-void deleteEnemy(EnemyList* current, Enemy* match)
-{
-    if(current->nextEnemy->enemy == match)
-    {
-        current->nextEnemy = current->nextEnemy->nextEnemy;
-        delete match;
-    }
-    else
-        deleteEnemy(current->nextEnemy,match);
-}
-
-/** \brief Check all the collisions.
- *
- * \param player1 Player* the player.
- * \param currentPtr EnemyList* the list with all the enemies.
- * \param firstPtr EnemyList* the first enemy in list.
- * \return void
- *  Check all possible collisions and do corresponding action.
- */
-void checkCollision(Player* player1, EnemyList* currentPtr, EnemyList* firstPtr)
-{
-    // Check if rocket hits enemy
-    if(player1->hasRocket() &&
-       CollisionDetection::isColliding(currentPtr->enemy->getPosition(), player1->getRocketPosition()))
-    {
-        deleteEnemy(firstPtr, currentPtr->enemy);
-        player1->deleteRocket();
-        player1->setScore(10);
-    }
-
-    // Check if enemy hits player
-    if(CollisionDetection::isColliding(currentPtr->enemy->getPosition(), player1->getPosition()))
-    {
-        deleteEnemy(firstPtr, currentPtr->enemy);
-        player1->setHealth(player1->getHealth()-1);
-
-    }
-
-    // Check if enemy bomb hits player
-    if(currentPtr->enemy->hasBomb() &&
-       CollisionDetection::isColliding(currentPtr->enemy->getBombPosition(), player1->getPosition()))
-    {
-        player1->setHealth(player1->getHealth()-1);
-        currentPtr->enemy->deleteBomb();
-    }
-}
-
