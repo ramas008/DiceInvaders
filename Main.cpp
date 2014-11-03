@@ -49,7 +49,7 @@ int APIENTRY WinMain(
         if(firstPtr->nextEnemy == nullptr)
             ListOfEnemies::createEnemies(currentPtr, firstPtr, system);
 
-	    // Update player
+        // Update player
         player1->update();
 
         // Update enemy and check all collisions
