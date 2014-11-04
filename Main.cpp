@@ -58,12 +58,17 @@ int APIENTRY WinMain(
 
         // Create new enemies if they all are dead
         if(firstPtr->nextEnemy == NULL)
+        {
+            direction = 1;
             ListOfEnemies::createEnemies(currentPtr, firstPtr, system, enemySprite, bombSprite, screenRes);
+        }
 
         // Update player
         player1->update();
 
-        // If enemy at border change direction can only change once each 1.5 second
+        // If enemy at border change direction
+        // A timer that makes it possible to only check the if statement each 1.5 seconds
+        // because of it getting stuck and changing direction all the time
         float end, start, diff;
         end = system->getElapsedTime();
         diff = end - start;
