@@ -63,6 +63,16 @@ int APIENTRY WinMain(
         // Update player
         player1->update();
 
+        // If enemy at border change direction can only change once each 1.5 second
+        float end, start, diff;
+        end = system->getElapsedTime();
+        diff = end - start;
+        if(ListOfEnemies::isEnemyOutOfBounds(firstPtr) && diff > 1.5)
+        {
+            start = system->getElapsedTime();
+            direction = -direction;
+        }
+
         // Update enemy and check all collisions
         currentPtr = firstPtr->nextEnemy;
         while(currentPtr)
@@ -75,10 +85,6 @@ int APIENTRY WinMain(
             ListOfEnemies::checkCollision(player1, currentPtr, firstPtr);
             currentPtr = currentPtr->nextEnemy;
         }
-
-        // If enemy at border change direction
-        if(ListOfEnemies::isEnemyOutOfBounds(firstPtr))
-            direction = -direction;
 
         // If player is dead go to Game Over
         if(player1->getHealth() < 1)
