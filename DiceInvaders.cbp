@@ -35,22 +35,22 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="Bomb.cpp" />
-		<Unit filename="Bomb.h" />
-		<Unit filename="CollisionDetection.cpp" />
-		<Unit filename="CollisionDetection.h" />
-		<Unit filename="DiceInvaders.h" />
-		<Unit filename="DiceInvadersLib.h" />
-		<Unit filename="Enemy.cpp" />
-		<Unit filename="Enemy.h" />
-		<Unit filename="ListOfEnemies.cpp" />
-		<Unit filename="ListOfEnemies.h" />
 		<Unit filename="Main.cpp" />
-		<Unit filename="Player.cpp" />
-		<Unit filename="Player.h" />
-		<Unit filename="Rocket.cpp" />
-		<Unit filename="Rocket.h" />
-		<Unit filename="Vec2.h" />
+		<Unit filename="include/Bomb.h" />
+		<Unit filename="include/CollisionDetection.h" />
+		<Unit filename="include/DiceInvaders.h" />
+		<Unit filename="include/DiceInvadersLib.h" />
+		<Unit filename="include/Enemy.h" />
+		<Unit filename="include/ListOfEnemies.h" />
+		<Unit filename="include/Player.h" />
+		<Unit filename="include/Rocket.h" />
+		<Unit filename="include/Vec2.h" />
+		<Unit filename="src/Bomb.cpp" />
+		<Unit filename="src/CollisionDetection.cpp" />
+		<Unit filename="src/Enemy.cpp" />
+		<Unit filename="src/ListOfEnemies.cpp" />
+		<Unit filename="src/Player.cpp" />
+		<Unit filename="src/Rocket.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
