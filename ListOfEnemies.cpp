@@ -20,15 +20,19 @@ bool ListOfEnemies::isEnemyOutOfBounds(EnemyList* current)
  * \param currentPtr EnemyList* points on the current enemy.
  * \param firstPtr EnemyList* points on the first enemy.
  * \param system IDiceInvaders* the game system.
+ * \param enemySprite ISprite* the enemy sprite.
+ * \param bombSprite ISprite* the enemy bomb sprite.
+ * \param screenRes Vec2 the screen resolution.
  * \return void
  *
  */
-void ListOfEnemies::createEnemies(EnemyList* currentPtr, EnemyList* firstPtr, IDiceInvaders* system)
+void ListOfEnemies::createEnemies(EnemyList* currentPtr, EnemyList* firstPtr, IDiceInvaders* system,
+                                  ISprite* enemySprite, ISprite* bombSprite, Vec2 screenRes)
 {
     for(int i = 0; i < ENEMY_AMOUNT; i++)
     {
         EnemyList* current = new EnemyList;
-        current->enemy = new Enemy(system, i%ROW_LENGTH, i/ROW_LENGTH);
+        current->enemy = new Enemy(system, enemySprite, bombSprite, i%ROW_LENGTH, i/ROW_LENGTH, screenRes);
         current->nextEnemy = currentPtr;
         currentPtr = current;
     }
@@ -40,7 +44,7 @@ void ListOfEnemies::createEnemies(EnemyList* currentPtr, EnemyList* firstPtr, ID
  * \param current EnemyList* the list with all the enemies.
  * \param match Enemy* the specified enemy.
  * \return void
- *  Delete enemy from list and from class.
+ *  Delete enemy from list and class.
  */
 void ListOfEnemies::deleteEnemy(EnemyList* current, Enemy* match)
 {
@@ -77,7 +81,6 @@ void ListOfEnemies::checkCollision(Player* player1, EnemyList* currentPtr, Enemy
     {
         deleteEnemy(firstPtr, currentPtr->enemy);
         player1->setHealth(player1->getHealth()-1);
-
     }
 
     // Check if enemy bomb hits player

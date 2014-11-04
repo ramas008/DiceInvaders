@@ -7,17 +7,17 @@
 class Rocket
 {
     public:
-        Rocket(IDiceInvaders* sys, float hPosition, float vPosition);
+        Rocket(IDiceInvaders* sys, ISprite* rSprite, Vec2 pos);
         ~Rocket();
 
-        void update();
-
         Vec2 getPosition();
-    protected:
+
+        void update();
     private:
         Vec2 position;
         float lastTime;
-        ISprite* sprite;
+
+        ISprite* rocketSprite;
         IDiceInvaders* system;
 };
 

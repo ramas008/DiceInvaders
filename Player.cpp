@@ -4,17 +4,24 @@
 /** \brief Constructor for Player class.
  *
  * \param sys IDiceInvaders* the game system.
- *  Initialize health, score, starting position, rocket, game system and sprite.
+ * \param pSprite ISprite* the player sprite.
+ * \param rSprite ISprite* the player rocket sprite.
+ * \param screenR Vec2 the screen resolution.
+ *  Initialize health, score, starting position, rocket,
+ *  screen resolution, game system and sprite.
  */
-Player::Player(IDiceInvaders* sys)
+Player::Player(IDiceInvaders* sys, ISprite* pSprite, ISprite* rSprite, Vec2 screenR)
 {
     health = 3;
     score = 0;
-    position = Vec2(320, 480 - 100);
+    position = Vec2(screenR.x()/2, screenR.y() - 100);
     rocket = NULL;
+    screenRes = screenR;
 
     system = sys;
-    sprite = system->createSprite("data/player.bmp");
+    playerSprite = pSprite;
+    rocketSprite = rSprite;
+
     lastTime = system->getElapsedTime();
 }
 
@@ -22,7 +29,8 @@ Player::Player(IDiceInvaders* sys)
  */
 Player::~Player()
 {
-
+    if(hasRocket())
+        delete rocket;
 }
 
 /** \brief Get player health
@@ -67,7 +75,6 @@ void Player::setScore(int sc)
     score += sc;
 }
 
-
 /** \brief Get rocket position.
  *
  * \return Vec2 the position.
@@ -76,31 +83,6 @@ void Player::setScore(int sc)
 Vec2 Player::getRocketPosition()
 {
     return rocket->getPosition();
-}
-
-/** \brief The player update function.
- *
- * \return void
- *  Draws the sprite to the screen, handles the controller and updates the rocket.
- */
-void Player::update()
-{
-    // Draw sprite at new position
-    sprite->draw(int(position.x()), int(position.y()));
-
-    // Controlling keys
-    handleController();
-
-    // Update rocket
-    if(hasRocket())
-    {
-        rocket->update();
-        // Check if rocket went out of screen
-        if(rocket->getPosition().y() < 0)
-        {
-            deleteRocket();
-        }
-    }
 }
 
 /** \brief Delete rocket.
@@ -134,6 +116,31 @@ Vec2 Player::getPosition()
     return position;
 }
 
+/** \brief The player update function.
+ *
+ * \return void
+ *  Draws the sprite to the screen, handles the controller and updates the rocket.
+ */
+void Player::update()
+{
+    // Draw sprite at new position
+    playerSprite->draw(int(position.x()), int(position.y()));
+
+    // Controlling keys
+    handleController();
+
+    // Update rocket
+    if(hasRocket())
+    {
+        rocket->update();
+        // Check if rocket went out of screen
+        if(rocket->getPosition().y() < 0)
+        {
+            deleteRocket();
+        }
+    }
+}
+
 /** \brief Handles the controller
  *
  * \return void
@@ -150,7 +157,7 @@ void Player::handleController()
     system->getKeyStatus(keys);
 
     // Check if moving to the right
-    if (keys.right && position.x() < 600)
+    if (keys.right && position.x() < screenRes.x() - 40)
         position.moveX(move);
 
     // Check if moving to the left
@@ -159,5 +166,5 @@ void Player::handleController()
 
     // Check if shooting
     if (keys.fire && !hasRocket())
-        rocket = new Rocket(system, position.x(), position.y());
+        rocket = new Rocket(system, rocketSprite, position);
 }

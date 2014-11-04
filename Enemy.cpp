@@ -4,20 +4,24 @@
 /** \brief Constructor for Enemy class.
  *
  * \param sys IDiceInvaders* the game system.
+ * \param enemySprite ISprite* the enemt sprite.
  * \param hPosition int the horizontal position of enemy.
  * \param vPosition int the vertical position of enemy.
- *  Initializing health, position, the previous direction,
-    a random number, last time for bomb and enemy and game system.
+ * \param screenR Vec2 the screen resolution.
+ *  Initializing health, position, the previous direction, screen resolution,
+ *  a random number, last time for bomb and enemy, sprite and game system.
  */
-Enemy::Enemy(IDiceInvaders* sys, int hPosition, int vPosition)
+Enemy::Enemy(IDiceInvaders* sys, ISprite* eSprite, ISprite* bSprite, int hPosition, int vPosition, Vec2 screenR)
 {
     prevDirection = 1;
     position = Vec2(hPosition*40 + 15, vPosition*40 + 15);
     bomb = NULL;
     randomNumber = rand() % 30 + 1;
+    screenRes = screenR;
 
     system = sys;
-    sprite = system->createSprite("data/enemy1.bmp");
+    enemySprite = eSprite;
+    bombSprite = bSprite;
 
     lastTime = system->getElapsedTime();
     lastBombTime = system->getElapsedTime();
@@ -27,7 +31,8 @@ Enemy::Enemy(IDiceInvaders* sys, int hPosition, int vPosition)
  */
 Enemy::~Enemy()
 {
-
+    if(hasBomb())
+        delete bomb;
 }
 
 /** \brief Update function for the Enemy.
@@ -39,7 +44,7 @@ Enemy::~Enemy()
 void Enemy::update(int direction)
 {
     // Draw sprite at new position
-    sprite->draw(int(position.x()), int(position.y()));
+    enemySprite->draw(int(position.x()), int(position.y()));
 
     // Calculating movement speed
     float newTime = system->getElapsedTime();
@@ -51,7 +56,7 @@ void Enemy::update(int direction)
     if(prevDirection != direction)
     {
         direction > 0?position.moveX(5):position.moveX(-5);
-        position.moveY(10.0f);
+        position.moveY(15.0f);
         prevDirection = direction;
     }
 
@@ -63,7 +68,7 @@ void Enemy::update(int direction)
     {
         randomNumber = rand() % 30 + 1;
         lastBombTime = newTime;
-        bomb = new Bomb(system, position.x(), position.y());
+        bomb = new Bomb(system, bombSprite, position);
     }
 
     // Update bomb
@@ -71,7 +76,7 @@ void Enemy::update(int direction)
     {
         bomb->update();
         // Check if bomb went out of screen
-        if(bomb->getPosition().y() > 480)
+        if(bomb->getPosition().y() > screenRes.y())
         {
             deleteBomb();
         }
@@ -85,12 +90,12 @@ void Enemy::update(int direction)
  */
 bool Enemy::outOfBounds()
 {
-    return (position.x() > 600) || (position.x() < 0);
+    return position.x() > (screenRes.x() - 30.0f) || position.x() < 0.0f;
 }
 
-/** \brief
+/** \brief Get bombs position.
  *
- * \return Vec2
+ * \return Vec2 the position.
  *
  */
 Vec2 Enemy::getBombPosition()
@@ -98,20 +103,30 @@ Vec2 Enemy::getBombPosition()
     return bomb->getPosition();
 }
 
+/** \brief Delete bomb.
+ *
+ * \return void
+ *
+ */
 void Enemy::deleteBomb()
 {
     delete bomb;
     bomb = NULL;
 }
 
+/** \brief Look if enemy bomb is in game.
+ *
+ * \return bool if enemy has the bomb or not.
+ *
+ */
 bool Enemy::hasBomb()
 {
     return bomb?true:false;
 }
 
-/** \brief
+/** \brief Get enemy position.
  *
- * \return Vec2*
+ * \return Vec2* the position.
  *
  */
 Vec2 Enemy::getPosition()

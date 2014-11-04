@@ -1,14 +1,12 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include "DiceInvaders.h"
-#include "Vec2.h"
 #include "Bomb.h"
 
 class Enemy
 {
     public:
-        Enemy(IDiceInvaders* sys, int hPosition, int vPosition);
+        Enemy(IDiceInvaders* sys, ISprite* eSprite, ISprite* bSprite, int hPosition, int vPosition, Vec2 screenR);
         ~Enemy();
 
         Vec2 getPosition();
@@ -16,19 +14,18 @@ class Enemy
         bool hasBomb();
         bool outOfBounds();
 
-        void setHealth(int hp);
         void deleteBomb();
         void update(int direction);
-    protected:
     private:
         Vec2 position;
+        Vec2 screenRes;
         int prevDirection;
         int randomNumber;
-        bool timeToMove();
         float lastTime, lastBombTime;
 
         IDiceInvaders* system;
-        ISprite* sprite;
+        ISprite* enemySprite;
+        ISprite* bombSprite;
         Bomb* bomb;
 };
 

@@ -1,14 +1,12 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "DiceInvaders.h"
 #include "Rocket.h"
-#include "Vec2.h"
 
 class Player
 {
     public:
-        Player(IDiceInvaders* sys);
+        Player(IDiceInvaders* sys, ISprite* pSprite, ISprite* rSprite, Vec2 screenR);
         ~Player();
 
         Vec2 getPosition();
@@ -22,15 +20,16 @@ class Player
         void deleteRocket();
         void update();
         void handleController();
-    protected:
     private:
         Vec2 position;
+        Vec2 screenRes;
         int health;
         int score;
         float lastTime;
 
         IDiceInvaders* system;
-        ISprite* sprite;
+        ISprite* playerSprite;
+        ISprite* rocketSprite;
         Rocket* rocket;
 };
 

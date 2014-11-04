@@ -7,18 +7,17 @@
 class Bomb
 {
     public:
-        Bomb(IDiceInvaders* sys, float hPosition, float vPosition);
+        Bomb(IDiceInvaders* sys, ISprite* bSprite, Vec2 pos);
         ~Bomb();
 
-        void update();
-
         Vec2 getPosition();
-    protected:
+
+        void update();
     private:
         Vec2 position;
         float lastTime;
 
-        ISprite* sprite;
+        ISprite* bombSprite;
         IDiceInvaders* system;
 };
 

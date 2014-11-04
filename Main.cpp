@@ -1,10 +1,8 @@
 #include <windows.h>
-#include <iostream>
 #include <cassert>
 #include <cstdio>
-#include <vector>
-#include <string.h>
 
+#include "Vec2.h"
 #include "Enemy.h"
 #include "Player.h"
 #include "DiceInvaders.h"
@@ -25,15 +23,22 @@ int APIENTRY WinMain(
     IDiceInvaders* system = lib.get();
 
     // Initialize the window
-    system->init(WIDTH, HEIGHT);
+    Vec2 screenRes = Vec2(WIDTH, HEIGHT);
+    system->init(screenRes.x(), screenRes.y());
+
+    // Create all sprites
+    ISprite* playerSprite = system->createSprite("data/player.bmp");
+    ISprite* enemySprite = system->createSprite("data/enemy1.bmp");
+    ISprite* rocketSprite = system->createSprite("data/rocket.bmp");
+    ISprite* bombSprite = system->createSprite("data/bomb.bmp");
 
     // Create player
-    Player* player1 = new Player(system);
+    Player* player1 = new Player(system, playerSprite, rocketSprite, screenRes);
 
     // Creating enemies
     EnemyList* currentPtr = nullptr;
     EnemyList* firstPtr = new EnemyList;
-    ListOfEnemies::createEnemies(currentPtr, firstPtr, system);
+    ListOfEnemies::createEnemies(currentPtr, firstPtr, system, enemySprite, bombSprite, screenRes);
     int direction = 1;
 
     // While game is running
@@ -45,9 +50,15 @@ int APIENTRY WinMain(
         system->drawText(30, 30, "Score: ");
         system->drawText(80, 30, buffer);
 
+        // Print the player health
+        buffer[50];
+        sprintf(buffer, "%d", player1->getHealth());
+        system->drawText(WIDTH - 140, 30, "Health: ");
+        system->drawText(WIDTH - 80, 30, buffer);
+
         // Create new enemies if they all are dead
         if(firstPtr->nextEnemy == nullptr)
-            ListOfEnemies::createEnemies(currentPtr, firstPtr, system);
+            ListOfEnemies::createEnemies(currentPtr, firstPtr, system, enemySprite, bombSprite, screenRes);
 
         // Update player
         player1->update();
@@ -56,6 +67,10 @@ int APIENTRY WinMain(
         currentPtr = firstPtr->nextEnemy;
         while(currentPtr)
         {
+            // Check if enemy is out for border
+            if(int(currentPtr->enemy->getPosition().y()) > HEIGHT-40)
+                player1->setHealth(0);
+
             currentPtr->enemy->update(direction);
             ListOfEnemies::checkCollision(player1, currentPtr, firstPtr);
             currentPtr = currentPtr->nextEnemy;
@@ -70,8 +85,8 @@ int APIENTRY WinMain(
                 break;
     }
 
-    // Game Over Screen
-    while (system->update())
+    // Game Over Screen if player is dead
+    while (player1->getHealth() < 1 && system->update())
     {
         char buffer[50];
         sprintf(buffer, "%d", player1->getScore());
@@ -80,9 +95,29 @@ int APIENTRY WinMain(
         system->drawText(WIDTH/2 + 30, HEIGHT/2, buffer);
     }
 
+    // Delete player at end of game
     delete player1;
+
+    // Delete all remaining enemies
+    currentPtr = firstPtr->nextEnemy;
+    while(currentPtr)
+    {
+        ListOfEnemies::deleteEnemy(firstPtr, currentPtr->enemy);
+        currentPtr = currentPtr->nextEnemy;
+    }
+
+    // Delete the enemy list pointers
+    delete firstPtr;
+    delete currentPtr;
+
+    // Destroy all sprites
+    playerSprite->destroy();
+    enemySprite->destroy();
+    rocketSprite->destroy();
+    bombSprite->destroy();
+
+    // Destroy game system
     system->destroy();
 
-
-	return 0;
+    return 0;
 }
