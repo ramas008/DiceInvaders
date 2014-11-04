@@ -67,16 +67,8 @@ int APIENTRY WinMain(
         player1->update();
 
         // If enemy at border change direction
-        // A timer that makes it possible to only check the if statement each 1.5 seconds
-        // because of it getting stuck and changing direction all the time
-        float end, start, diff;
-        end = system->getElapsedTime();
-        diff = end - start;
-        if(ListOfEnemies::isEnemyOutOfBounds(firstPtr) && diff > 1.5)
-        {
-            start = system->getElapsedTime();
+        if(ListOfEnemies::isEnemyOutOfBounds(firstPtr->nextEnemy))
             direction = -direction;
-        }
 
         // Update enemy and check all collisions
         currentPtr = firstPtr->nextEnemy;

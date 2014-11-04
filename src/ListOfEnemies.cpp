@@ -1,5 +1,6 @@
 #include "ListOfEnemies.h"
 #include "CollisionDetection.h"
+#include <stdlib.h>
 
 /** \brief Check if enemy is out of bounds.
  *
