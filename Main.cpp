@@ -36,7 +36,7 @@ int APIENTRY WinMain(
     Player* player1 = new Player(system, playerSprite, rocketSprite, screenRes);
 
     // Creating enemies
-    EnemyList* currentPtr = nullptr;
+    EnemyList* currentPtr = NULL;
     EnemyList* firstPtr = new EnemyList;
     ListOfEnemies::createEnemies(currentPtr, firstPtr, system, enemySprite, bombSprite, screenRes);
     int direction = 1;
@@ -57,7 +57,7 @@ int APIENTRY WinMain(
         system->drawText(WIDTH - 80, 30, buffer);
 
         // Create new enemies if they all are dead
-        if(firstPtr->nextEnemy == nullptr)
+        if(firstPtr->nextEnemy == NULL)
             ListOfEnemies::createEnemies(currentPtr, firstPtr, system, enemySprite, bombSprite, screenRes);
 
         // Update player
